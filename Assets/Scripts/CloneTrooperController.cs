@@ -32,7 +32,6 @@ public class CloneTrooperController : MonoBehaviour
 
     private bool onMove, fireReady, died;
     private int deathNumber;
-    private Vector3 movement;
     private Animator animator;
     private NavMeshAgent agent;
     private DroidController droidController;
@@ -42,11 +41,11 @@ public class CloneTrooperController : MonoBehaviour
     {
         animator = GetComponent<Animator>(); //get the animator
         agent = GetComponent<NavMeshAgent>(); //get the nav agent
-        CT_Armature.GetComponent<Animator>(); // get the rig animator
-        gamecontroller = FindObjectOfType<GameController>().GetComponent<GameController>(); // get the gamecontroller
+        CT_Armature.GetComponent<Animator>(); //get the rig animator
+        gamecontroller = FindObjectOfType<GameController>().GetComponent<GameController>(); //get the gamecontroller
         healthbar = FindObjectOfType<Slider>().GetComponent<Slider>(); //find and get the slider in the scene
-        gamecontroller.currentNumberofClones += 1; // add to the number of clones by one
-        fireReady = true; // fireReady equalls true
+        gamecontroller.currentNumberofClones += 1; //add to the number of clones by one
+        fireReady = true; //fireReady equalls true
     }
 
     // Update is called once per frame
@@ -54,7 +53,7 @@ public class CloneTrooperController : MonoBehaviour
     {
         if (!died) //if not died
         {
-            playerMovement(); // playerMovement Function
+            playerMovement(); //playerMovement Function
             findTarget(); //findEnemy Funtion
             moveOrFire(); //moveOrFire Function
             UpdateHealth(); //updatehealth Function
@@ -64,16 +63,16 @@ public class CloneTrooperController : MonoBehaviour
     // function to player's movement
     void playerMovement()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    // create a ray that is position to the main camera and point out at the direction of the camera   
-        RaycastHit hit; // create a output of whatever the ray hits
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    //create a ray that is position to the main camera and point out at the direction of the camera   
+        RaycastHit hit; //create a output of whatever the ray hits
 
-        if (Input.GetButtonDown("Fire1"))   // if the player press's down on the left mouse button
+        if (Input.GetButtonDown("Fire1"))   //if the player press's down on the left mouse button
         {
-            if (Physics.Raycast(ray, out hit))  // get the ray that we created and get the output of hit
+            if (Physics.Raycast(ray, out hit))  //get the ray that we created and get the output of hit
             {
-                if (hit.collider.CompareTag("Environment")) // if the output has a collider tag named Environment
+                if (hit.collider.CompareTag("Environment")) //if the output has a collider tag named Environment
                 {
-                    agent.SetDestination(new Vector3(hit.point.x, hit.point.y, hit.point.z)); // go to the point where the mouse was clicked
+                    agent.SetDestination(new Vector3(hit.point.x, hit.point.y, hit.point.z)); //go to the point where the mouse was clicked
                     target = null; //set target to null
                     agent.stoppingDistance = 0; //reset stopping distance to 0
                     agent.isStopped = false; //allow the agent to move
@@ -83,11 +82,11 @@ public class CloneTrooperController : MonoBehaviour
 
         if (agent.velocity.magnitude > 0) //if the players velocity magnitude is greater than 0
         {
-            onMove = true; // let the bool be true
+            onMove = true; //let the bool be true
         }
         else
         {
-            onMove = false; // let the bool be false
+            onMove = false; //let the bool be false
         }
 
         CT_Armature.SetBool("onMove", onMove); //get the bool OnMove and assign it to onMove
@@ -97,18 +96,18 @@ public class CloneTrooperController : MonoBehaviour
     // function to find target
     void findTarget()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    // create a ray that is position to the main camera and point out at the direction of the camera   
-        RaycastHit hit; // create a output of whatever the ray hits
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create a ray that is position to the main camera and point out at the direction of the camera   
+        RaycastHit hit; //create a output of whatever the ray hits
 
-        if (Input.GetButtonDown("Fire1"))   // if the player press's down on the left mouse button
+        if (Input.GetButtonDown("Fire1")) //if the player press's down on the left mouse button
         {
-            if (Physics.Raycast(ray, out hit))  // get the ray that we created and get the output of hit
+            if (Physics.Raycast(ray, out hit)) //get the ray that we created and get the output of hit
             {
-                if (hit.collider.CompareTag("Enemy")) // if the output has a collider tag named Enemy
+                if (hit.collider.CompareTag("Enemy")) //if the output has a collider tag named Enemy
                 {
                     target = hit.collider.gameObject; //assign target to the collider that was hit
                     droidController = target.GetComponent<DroidController>(); //get the droids controller script
-                    agent.isStopped = false;//allow the agent to move
+                    agent.isStopped = false; //allow the agent to move
                 }
             }
         }
@@ -119,14 +118,14 @@ public class CloneTrooperController : MonoBehaviour
     {
         if(target != null) //if target isnt null
         {
-            if(Vector3.Distance(transform.position, target.transform.position) < fireRaduis) // if the distance is less than 10 units
+            if(Vector3.Distance(transform.position, target.transform.position) < fireRaduis) //if the distance is less than 10 units
             {
-                transform.LookAt(target.transform.position + targetOffset); // look at the enemy + the offset
-                fireAtEnemy(); // run the function fireAtEnemy
+                transform.LookAt(target.transform.position + targetOffset); //look at the enemy + the offset
+                fireAtEnemy(); //run the function fireAtEnemy
             }
             else
             {
-                moveTowardEnemy(); // run the function moveTowardsEnemy
+                moveTowardEnemy(); //run the function moveTowardsEnemy
             }
         }
     }
@@ -134,10 +133,10 @@ public class CloneTrooperController : MonoBehaviour
     //fundtion of fireEnemy
     void fireAtEnemy()
     {
-        if (fireReady) // if fireReady is true
+        if (fireReady) //if fireReady is true
         {
-            fireReady = false; // fireReady equals false
-            StartCoroutine(fireRifle()); // start coroutine fireRifle
+            fireReady = false; //fireReady equals false
+            StartCoroutine(fireRifle()); //start coroutine fireRifle
         }
     }
 
@@ -145,7 +144,7 @@ public class CloneTrooperController : MonoBehaviour
     void moveTowardEnemy()
     {
         agent.SetDestination(target.transform.position); //set destination to targets position
-        agent.stoppingDistance = fireRaduis; // the stopping distance equals the fire raduis
+        agent.stoppingDistance = fireRaduis; //the stopping distance equals the fire raduis
     }
 
     //coroutine of fireRifle
@@ -155,14 +154,14 @@ public class CloneTrooperController : MonoBehaviour
         {
             agent.velocity = Vector3.zero; //come to a full stop when shooting
             agent.isStopped = true; //stop the agent from moving so it can fire (this fixes any issue with the clone shooting and trying to go to a previous destination hit)
-            animator.SetTrigger("Shoot");   //set trigger shoot
+            animator.SetTrigger("Shoot"); //set trigger shoot
             Instantiate(redLaserBlast, blastPosition.transform.position, blastPosition.transform.rotation); //instantiate a fire blast in the position and direction of the blast position and players rotation
             yield return new WaitForSeconds(coolDown); //wait for a fixed amount of seconds
-            fireReady = true; // fireReady equall's true
+            fireReady = true; //fireReady equall's true
         }
         else
         {
-            fireReady = true; // fireReady equall's true even if droid is died (solves issue previous problem if droid is died or not we want fireReady to be true)
+            fireReady = true; //fireReady equall's true even if droid is died (solves issue previous problem if droid is died or not we want fireReady to be true)
         }
     }
     // function of updatehealth
@@ -171,8 +170,8 @@ public class CloneTrooperController : MonoBehaviour
         healthbar.value = health; //health slider value equals players health
         if (gamecontroller.regenHealth)
         {
-            StartCoroutine(RegenerateHealth());
-            gamecontroller.regenHealth = false;
+            StartCoroutine(RegenerateHealth()); //start coroutine
+            gamecontroller.regenHealth = false; //set to false
         }
     }
 
@@ -181,8 +180,8 @@ public class CloneTrooperController : MonoBehaviour
         yield return new WaitForSeconds(1);
         while(health != 100)
         {
-            yield return new WaitForSeconds(.2f);
-            health += 5;
+            yield return new WaitForSeconds(.2f); //wait .2 seconds
+            health += 5; //plus equal 5
         }
     }
 
